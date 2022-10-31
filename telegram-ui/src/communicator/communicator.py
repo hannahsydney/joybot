@@ -1,11 +1,11 @@
-from depression_information_system import DepressionInformationSystem
-from output import Output
-from state_tracker import StateTracker
-from state import State
+from communicator.depression_information_system import DepressionInformationSystem
+from communicator.output import Output
+from communicator.state_tracker import StateTracker
+from communicator.state import State
 
 
 class Communicator:
-    def __init__(self, max_eval_inputs=2, low_threshold=0.3, high_threshold=0.7, depression_information_file='data/depression_information.xlsx'):
+    def __init__(self, max_eval_inputs=2, low_threshold=0.3, high_threshold=0.7, depression_information_file='src/communicator/data/depression_information.xlsx'):
         self.state_tracker = StateTracker(
             max_eval_inputs, low_threshold, high_threshold)
         self.dep_info_sys = DepressionInformationSystem(
@@ -57,7 +57,7 @@ class Communicator:
 
     def __get_state_response(self, user_input, prev_state):
         state = self.state_tracker.get_state()
-        value = 0.3
+        value = 0.5
 
         if state == State.EVAL:
             return self.__get_state_eval_response()
@@ -76,18 +76,6 @@ class Communicator:
         return self.__get_state_response(user_input, prev_state)
 
 
-def main():
-    communicator = Communicator()
-    exit_line = '\n[Enter bye to exit]'
-    print(communicator.start() + exit_line)
-    user_input = input()
-    while user_input.lower() != 'bye':
-        print()
-        print(communicator.handle_input(user_input) + exit_line)
-        user_input = input()
-    print('See you.')
-    print()
+def init():
+    return Communicator()
 
-
-if __name__ == '__main__':
-    main()

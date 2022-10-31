@@ -1,4 +1,4 @@
-from state import State
+from communicator.state import State
 
 
 class StateTracker:

@@ -2,8 +2,8 @@ import os
 import logging
 from time import sleep
 from typing import Dict
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 from telegram import __version__ as TG_VER
 
 try:
@@ -29,7 +29,8 @@ from telegram.ext import (
     filters,
 )
 from util.errorhandler import error_handler
-from util import communicator
+from communicator.communicator import init
+from communicator.communicator import Communicator
 
 
 # *=================================== SETUP ===================================*
@@ -45,6 +46,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+communicator = Communicator()
 
 CHAT, NAME, CONFIRMED_NAME, GREETED, TESTLOOP = range(5)
 
@@ -52,6 +54,7 @@ CHAT, NAME, CONFIRMED_NAME, GREETED, TESTLOOP = range(5)
 # *=================================== CHAT FUNCTIONS ===================================*
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    communicator.__init__()
     """Start the conversation"""
     await update.message.reply_text('Hi, nice to meet you!')
 
@@ -96,11 +99,11 @@ async def greet(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     await fake_typing(update)
     await update.message.reply_text((
-        f'That\'s a lovely name. Once again, hello, {name}.'
+        f'That\'s a lovely name, {name}.'
     ))
 
     await fake_typing(update)
-    message = communicator.generate_response("Start")  # TODO, currently stubbed
+    message = communicator.start()
     await update.message.reply_text(message)
 
     # context.user_data['first_prompt'] = True
@@ -113,8 +116,9 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Recursive chat function until communicator ends the chat"""
     reply = update.message.text
 
-    bot_response = communicator.generate_response(reply)
+    bot_response = communicator.handle_input(reply)
 
+    # probably won't be used
     if bot_response == "end":
         await test_loop(update, context)
         return ConversationHandler.END

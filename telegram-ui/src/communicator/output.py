@@ -18,7 +18,7 @@ class Output:
                helplines
 
     def opening(self):
-        return "Hi, please tell me more about yourself."
+        return "Please tell me more about yourself."
 
     def error(self):
         return "Something went wrong..."
