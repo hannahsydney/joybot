@@ -1,4 +1,4 @@
-class Output:
+class OutputFormatter:
     def __result(self, value):
         return "~ You have {0:.2f}% chance to have depression ~\n".format(value * 100)
 
