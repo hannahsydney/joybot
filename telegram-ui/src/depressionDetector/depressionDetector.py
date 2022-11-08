@@ -14,6 +14,9 @@ tf.random.set_seed(42)
 os.environ['TF_DETERMINISTIC_OPS'] = '1'
 nltk.download("all")
 
+from dotenv import load_dotenv
+load_dotenv()
+DEPRESSION_MODEL_PATH = os.environ['depression_model_path']
 
 class Detector:
   def buildModel(self, voc_size, sent_length):
@@ -23,7 +26,7 @@ class Detector:
       model.add((tf.keras.layers.LSTM(100)))
       model.add(tf.keras.layers.Dense(1,activation='sigmoid'))
       model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['binary_accuracy'])
-      model.load_weights("model/model.h5")
+      model.load_weights(DEPRESSION_MODEL_PATH)
       return model
 
   def __init__(self):
@@ -64,8 +67,7 @@ class Detector:
     pred = self.model.predict(processedInput)
     pred = (pred >= 0.5).astype("int")
     self.userInput.update({input: pred[0][0]})
-    self.userInputDf = self.userInputDf.append(
-        {'input': input, 'is_depressed': pred[0][0]}, ignore_index=True)
+    self.userInputDf = pd.concat([self.userInputDf, pd.Series({'input': input, 'is_depressed': pred[0][0]})])
     self.updateScore()
 
 def init():

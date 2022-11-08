@@ -29,8 +29,8 @@ from telegram.ext import (
     filters,
 )
 from util.errorhandler import error_handler
-from communicator.communicator import init
 from communicator.communicator import Communicator
+from queue import Queue
 
 
 # *=================================== SETUP ===================================*
@@ -54,7 +54,8 @@ CHAT, NAME, CONFIRMED_NAME, GREETED, TESTLOOP = range(5)
 # *=================================== CHAT FUNCTIONS ===================================*
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    communicator.__init__()
+    context.user_data['communicator'] = Communicator(max_eval_inputs=10)
+    # communicator.__init__()
     """Start the conversation"""
     await update.message.reply_text('Hi, nice to meet you!')
 
@@ -103,11 +104,15 @@ async def greet(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     ))
 
     await fake_typing(update)
+    # start the bot
+    communicator = context.user_data['communicator']
     message = communicator.start()
+
     await update.message.reply_text(message)
 
     # context.user_data['first_prompt'] = True
-    # context.user_data['last_three_msgs'] = Queue(maxsize=3)
+    # initialise message history
+    context.chat_data['message_history'] = Queue(maxsize=5)
 
     return GREETED
 
@@ -116,7 +121,17 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Recursive chat function until communicator ends the chat"""
     reply = update.message.text
 
-    bot_response = communicator.handle_input(reply)
+    # update the chat history
+    if context.chat_data['message_history'].full():
+        context.chat_data['message_history'].get()
+    context.chat_data['message_history'].put(reply)
+
+    history = context.chat_data['message_history']
+    
+    communicator = context.user_data['communicator']
+    bot_response = communicator.handle_input(reply, list(history.queue))
+
+    # await update.message.reply_text(str(list(history.queue)))
 
     # probably won't be used
     if bot_response == "end":
