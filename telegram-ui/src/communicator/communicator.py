@@ -2,6 +2,7 @@ from communicator.depression_information_system import DepressionInformationSyst
 from communicator.output_formatter import OutputFormatter
 from communicator.state_tracker import StateTracker
 from communicator.state import State
+from godel.godel import generate
 
 
 class Communicator:
@@ -15,7 +16,7 @@ class Communicator:
     def start(self):
         return self.output_formatter.opening()
 
-    def __eval(self, user_input):
+    def __eval(self):
         state = self.state_tracker.get_state()
         # Do evaluation for only EVAL or CHAT
         if state == State.EVAL or state == state.CHAT:
@@ -23,18 +24,17 @@ class Communicator:
             # TODO: Pass result to depression scaler
             self.state_tracker.update(0.3)
 
-    def __get_state_eval_response(self):
-        # Get current and max evaluation inputs
+    def __get_state_eval_response(self, user_input):
+        # Interact with GODEL and return response with evaluation status
         cur = self.state_tracker.get_cur_eval_inputs()
         max = self.state_tracker.get_max_eval_inputs()
-        # Interact with CakeChat and return response with evaluation status
-        # TODO: Pass input to cakechat and return response
-        return self.output_formatter.evaluation_response("CakeChat response.", cur, max)
+        godel_response = generate(user_input)
+        return self.output_formatter.evaluation_response(godel_response, cur, max)
 
-    def __get_state_chat_response(self, value):
-        # Interact with CakeChat and return response with result
-        # TODO: Pass input to cakechat and append response
-        return self.output_formatter.chat_response("CakeChat response.", value)
+    def __get_state_chat_response(self, user_input, value):
+        # Interact with GODEL and return response with result
+        godel_response = generate(user_input)
+        return self.output_formatter.chat_response(godel_response, value)
 
     def __get_state_info_response(self, value, user_input, prev_state):
         # Get options
@@ -60,9 +60,9 @@ class Communicator:
         value = 0.5
 
         if state == State.EVAL:
-            return self.__get_state_eval_response()
+            return self.__get_state_eval_response(user_input)
         elif state == State.CHAT:
-            return self.__get_state_chat_response(value)
+            return self.__get_state_chat_response(value, user_input)
         elif state == State.INFO:
             return self.__get_state_info_response(value, user_input, prev_state)
         elif state == State.HELP:
