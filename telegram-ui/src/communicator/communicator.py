@@ -5,7 +5,7 @@ from communicator.state import State
 
 
 class Communicator:
-    def __init__(self, max_eval_inputs=2, low_threshold=0.3, high_threshold=0.7, depression_information_file='src/communicator/data/depression_information.xlsx'):
+    def __init__(self, max_eval_inputs=2, low_threshold=0.3, high_threshold=0.7, depression_information_file='/src/communicator/data/depression_information.xlsx'):
         self.state_tracker = StateTracker(
             max_eval_inputs, low_threshold, high_threshold)
         self.dep_info_sys = DepressionInformationSystem(
