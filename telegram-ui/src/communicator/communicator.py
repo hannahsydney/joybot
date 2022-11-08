@@ -72,7 +72,7 @@ class Communicator:
 
     def handle_input(self, user_input):
         prev_state = self.state_tracker.get_state()
-        self.__eval(user_input)
+        self.__eval()
         return self.__get_state_response(user_input, prev_state)
 
 
