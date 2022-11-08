@@ -3,7 +3,9 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 tokenizer = AutoTokenizer.from_pretrained("microsoft/GODEL-v1_1-base-seq2seq")
 model = AutoModelForSeq2SeqLM.from_pretrained("microsoft/GODEL-v1_1-base-seq2seq")
 
-def generate(dialog):
+def generate(input):
+    dialog = []
+    dialog.append(input)
     # Instruction for a chitchat task
     instruction = f'Instruction: given a dialog context, you need to response empathically.'    
     knowledge = ''
@@ -23,6 +25,9 @@ def generate(dialog):
 #     dialog.append(chat)
 #     response = generate(dialog)
 #     print("GODEL: ",response)
-
+# while True:
+#     chat = input('Me: ')
+#     response = generate(chat)
+#     print("GODEL: ",response)
 
 
