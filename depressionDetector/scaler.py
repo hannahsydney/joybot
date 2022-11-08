@@ -5,6 +5,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from tensorflow.keras.preprocessing.text import one_hot
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import joblib
 
 nltk.download("all")
 
@@ -41,8 +42,7 @@ class Scaler:
 
     def depressionDetection(self, input):
         processedInput = self.preprocessInput(input)
-        # TODO: load model
-        model = {}
+        model = joblib.load("model.pkl")
         pred = model.predict(processedInput)
         pred = (pred >= 0.5).astype("int")
         self.userInput.update({input: pred[0][0]})
