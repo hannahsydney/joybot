@@ -15,6 +15,6 @@ To run the application locally:
 - Activate the venv using `venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac)
 - Run `python src/joybot.py`
 
-## Run Depression Detection Model Training
+## Re-train Depression Detection Model
 The depression detection model is already trained. To re-train the depression detection model:
 - Run `python src/trainModel.py`
