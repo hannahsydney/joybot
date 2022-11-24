@@ -16,6 +16,7 @@ Necessary environment variables include:
 To run the application locally:
 - Create a virtual environment with `python -m venv venv`
 - Activate the venv using `venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac)
+- Run `pip install -r requirements.txt`
 - Run `python src/joybot.py`
 
 ## Re-train Depression Detection Model
