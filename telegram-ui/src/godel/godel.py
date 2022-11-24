@@ -4,6 +4,7 @@ tokenizer = AutoTokenizer.from_pretrained("microsoft/GODEL-v1_1-base-seq2seq")
 model = AutoModelForSeq2SeqLM.from_pretrained("microsoft/GODEL-v1_1-base-seq2seq")
 
 def generate(dialog):
+    dialog = dialog[-3:]
     # Instruction for a chitchat task
     instruction = f'Instruction: given a dialog context, you need to response empathically.'    
     knowledge = ''
