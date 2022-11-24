@@ -4,7 +4,7 @@ This bot makes use of the [Telegram Bot API](https://github.com/python-telegram-
 
 
 ## Setup
-MOdifiy the `.env` file under the `/src` directory. This file defines all the environment variables necessary for the app to run.
+Modifiy the `.env` file under the `/src` directory. This file defines all the environment variables necessary for the app to run.
 
 Necessary environment variables include:
 - `bot_token`: The Telegram bot API token
