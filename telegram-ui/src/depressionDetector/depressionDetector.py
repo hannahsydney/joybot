@@ -34,7 +34,8 @@ class Detector:
 
     def __init__(self):
         self.userInput = dict()
-        self.userInputDf = pd.DataFrame(columns=['input', 'is_depressed'])
+        self.userInputDf = pd.DataFrame(
+            columns=['input', 'depressed_percentage'])
         self.score = 0
         # total unique voc size used to training model
         self.voc_size = 18611
@@ -62,12 +63,16 @@ class Detector:
         # # score = # depressed input / # total input
         # depressedCount = self.userInputDf[self.userInputDf['is_depressed'] == 1].shape[0]
         # self.score = round(depressedCount/self.userInputDf.shape[0], 2)
-        input = ""
+        # input=""
+        totalScore = 0
+        count = 0
         for index, row in self.userInputDf.iterrows():
-            input += row['input']+" "
-
-        processedInput = self.preprocessInput(input.strip())
-        self.score = self.model.predict(processedInput)[0][0]
+            # input+=row['input']+". "
+            totalScore += row['depressed_percentage']
+            count += 1
+        # processedInput=self.preprocessInput(input.strip())
+        # self.score=self.model.predict(processedInput)[0][0]
+        self.score = totalScore/count
 
     def getScore(self):
         return self.score
@@ -77,7 +82,7 @@ class Detector:
         pred = self.model.predict(processedInput)
         self.userInput.update({input: pred[0][0]})
         self.userInputDf = self.userInputDf.append(
-            {'input': input, 'is_depressed': pred[0][0]}, ignore_index=True)
+            {'input': input, 'depressed_percentage': pred[0][0]}, ignore_index=True)
         self.updateScore()
 
 
