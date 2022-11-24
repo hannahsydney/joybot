@@ -67,7 +67,7 @@ class Detector:
             input += row['input']+" "
 
         processedInput = self.preprocessInput(input.strip())
-        self.score = self.model.predict(processedInput)
+        self.score = self.model.predict(processedInput)[0][0]
 
     def getScore(self):
         return self.score
