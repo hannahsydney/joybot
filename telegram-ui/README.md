@@ -8,8 +8,8 @@ Modifiy the `.env` file under the `/src` directory. This file defines all the en
 
 Necessary environment variables include:
 - `bot_token`: The Telegram bot API token
-- `depression_model_path`: The path to load model.h5 pre-trained model weight
-- `training_data_path`: The path to depression_dataset_reddit_cleaned.csv dataset for training depresion detection model
+- `depression_model_path`: The path to load pre-trained model weight
+- `training_data_path`: The path to the dataset for training depresion detection model
 - `depression_information_path`: The path to depression_information.xlsx
 
 ## Run JoyBot
